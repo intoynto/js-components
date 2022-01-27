@@ -52,6 +52,12 @@ export class InputAngka<P extends IInputAngkaProps,S extends IState> extends Rea
         this.state={
             focus:false,
         };
+        this.athParProps(props);
+    }
+
+    private athParProps=(props?:P)=>
+    {
+        props=props||this.props;
         this.value=(props as any).value||'';
     }
 
@@ -83,6 +89,19 @@ export class InputAngka<P extends IInputAngkaProps,S extends IState> extends Rea
         return harusUpdate;
     }
 
+    componentDidUpdate(props:P)
+    {
+        const a=toFloat(this.props.value);
+        const b=toFloat(props.value);
+        const sama=a===b;
+        if(!sama)
+        {
+            this.athParProps(props);
+            this.forceUpdate();
+            return;
+        }
+    }
+
     protected hFocus(e:React.FocusEvent<HTMLInputElement>)
     {
         this.setState({focus:true});
@@ -96,9 +115,8 @@ export class InputAngka<P extends IInputAngkaProps,S extends IState> extends Rea
     renderNotify()
     {
         if(!this.state.focus) return null;
-
         return(
-            <span style={styleSub} className="input-angka-notify">{toDashVal(this.value,this.props.digit)}</span>
+            <span style={styleSub} className="input-angka-notify">{toDashVal(this.props.value,this.props.digit)}</span>
         );
     }
 
