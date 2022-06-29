@@ -1,7 +1,6 @@
 import React from "react";
 import { isEqual, toDashVal, toFloat } from "./utils";
 
-
 type IAnyEvent=React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>;
 
 let style:React.CSSProperties={
