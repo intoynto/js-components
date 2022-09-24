@@ -1,6 +1,6 @@
 {
   "name": "intoy-components",
-  "version": "0.0.3-beta-0.2",
+  "version": "0.0.3-beta-0.3",
   "description": "js react components",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "autosize": "^5.0.1",
-    "preact": "^10.6.2"
+    "preact": "10.10.2"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
