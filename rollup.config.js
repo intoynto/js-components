@@ -20,20 +20,13 @@ export default [
                 name:packageJson.name,
                 globals:{
                     react:"React",
-                    //"intoy-modal":"intoy-modal",
-                    //"intoy-utils":"intoy-utils",
-                    //"intoy-xhr":"intoy-xhr",
-                    //"intoy-select":"intoy-select",
                 },
             },            
         ],
         external:[
             "react",
             "react-dom",
-            //"intoy-modal",
-            //"intoy-select",
-            //"intoy-utils",
-            //"intoy-xhr",
+            "autosize",
         ],
         plugins:[
             typescript({tsconfig:"./tsconfig.json"}),
