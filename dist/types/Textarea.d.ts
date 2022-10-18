@@ -9,6 +9,7 @@ interface ITextareaProps {
     onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     rows?: number;
     maxLength?: number;
+    className?: string;
 }
 export declare class Textarea<P extends ITextareaProps> extends React.Component<P> {
     constructor(props: P);

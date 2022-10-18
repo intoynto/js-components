@@ -11,6 +11,7 @@ interface ITextareaProps {
     onChange?:(e:React.ChangeEvent<HTMLTextAreaElement>)=>void
     rows?:number
     maxLength?:number
+    className?:string
 }
 
 export class Textarea<P extends ITextareaProps> extends React.Component<P> 
@@ -81,6 +82,9 @@ export class Textarea<P extends ITextareaProps> extends React.Component<P>
                 style={{
                     minHeight:this.props.minHeight?this.props.minHeight:"36px",
                 }}
+
+                className={`${props.className?props.className:''}`}
+                
                 ref={c => this.textarea = c}
                 onChange={this.onChange}
 
