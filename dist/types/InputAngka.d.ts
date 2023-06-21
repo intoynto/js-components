@@ -20,11 +20,13 @@ export declare class InputAngka<P extends IInputAngkaProps, S extends IState> ex
     protected value: string;
     constructor(props: P);
     private athParProps;
-    shouldComponentUpdate(nextProps: P, nextState: S): boolean;
-    componentDidUpdate(props: P): void;
     protected hFocus(e: React.FocusEvent<HTMLInputElement>): void;
     protected hBlur(e: React.FocusEvent<HTMLInputElement>): void;
+    private onChange;
+    private onKeyP;
     renderNotify(): JSX.Element | null;
+    shouldComponentUpdate(nextProps: P, nextState: S): boolean;
+    componentDidUpdate(prevProps: P): void;
     render(): JSX.Element;
 }
 export {};

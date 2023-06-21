@@ -1,6 +1,6 @@
 {
   "name": "intoy-components",
-  "version": "0.0.3-beta-0.6",
+  "version": "0.0.3-beta-0.7",
   "description": "js react components",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",

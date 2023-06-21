@@ -1,6 +1,7 @@
 import React from "react";
 import { isEqual, toDashVal, toFloat } from "./utils";
 
+
 type IAnyEvent=React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>;
 
 let style:React.CSSProperties={
@@ -37,6 +38,9 @@ interface IState {
     focus:boolean    
 }
 
+type ChangeEvent=React.ChangeEvent<HTMLInputElement>;
+type KeyboardHandle=React.KeyboardEvent<HTMLInputElement >;
+
 export class InputAngka<P extends IInputAngkaProps,S extends IState> extends React.Component<P,IState>{
     protected ndInput:any;
     protected enableEvent:boolean=true;
@@ -48,6 +52,8 @@ export class InputAngka<P extends IInputAngkaProps,S extends IState> extends Rea
         super(props);   
         this.hFocus=this.hFocus.bind(this);
         this.hBlur=this.hBlur.bind(this);
+        this.onChange=this.onChange.bind(this);
+        this.onKeyP=this.onKeyP.bind(this);
         this.state={
             focus:false,
         };
@@ -57,13 +63,64 @@ export class InputAngka<P extends IInputAngkaProps,S extends IState> extends Rea
     private athParProps=(props?:P)=>
     {
         props=props||this.props;
-        this.value=(props as any).value||'';
+        this.value=(props?.value||'').toString();
+    }
+
+    protected hFocus(e:React.FocusEvent<HTMLInputElement>)
+    {
+        this.setState({focus:true});
+    }
+
+    protected hBlur(e:React.FocusEvent<HTMLInputElement>)
+    {
+        this.setState({focus:false});
+    }
+
+    private onChange(e:ChangeEvent)
+    {
+        this.value=e.target.value;
+        if(typeof this.props.onChange==='function')
+        {
+            this.props.onChange(e);
+        }
+    }
+
+    private onKeyP(evt:KeyboardHandle)
+    {
+        const {key}=evt;
+        if(evt.getModifierState('Meta') 
+        || evt.getModifierState('Control')
+        || evt.getModifierState('Alt')
+        )
+        {
+            return;
+        }
+
+        if(key.length!==1 || key==='\x00')
+        {
+            return;
+        }
+
+        const int:any=parseInt(key);
+        const is_true=(!isNaN(int)) || (key==='.' || key==='-');
+        if(!is_true)        
+        {
+            evt.preventDefault();
+        }
+    }
+
+    renderNotify()
+    {
+        if(!this.state.focus) return null;
+        return(
+            <span style={styleSub} className="input-angka-notify">{toDashVal(this.value,this.props.digit)}</span>
+        );
     }
 
     shouldComponentUpdate(nextProps:P,nextState:S)
     {
-        const a=toFloat(this.props.value);
-        const b=toFloat(nextProps.value);
+        const a=(this.props.value)?.toString(); toFloat(this.props.value);
+        const b=(nextProps.value)?.toString();
         let sama=true;
         const cs:string[]=[
             'name',
@@ -88,35 +145,18 @@ export class InputAngka<P extends IInputAngkaProps,S extends IState> extends Rea
         return harusUpdate;
     }
 
-    componentDidUpdate(props:P)
+    componentDidUpdate(prevProps:P)
     {
-        const a=toFloat(this.props.value);
-        const b=toFloat(props.value);
+        const a=(this.props.value)?.toString();
+        const b=(prevProps.value)?.toString();
         const sama=a===b;
+        
         if(!sama)
         {
-            this.athParProps(props);
+            this.athParProps();
             this.forceUpdate();
             return;
         }
-    }
-
-    protected hFocus(e:React.FocusEvent<HTMLInputElement>)
-    {
-        this.setState({focus:true});
-    }
-
-    protected hBlur(e:React.FocusEvent<HTMLInputElement>)
-    {
-        this.setState({focus:false});
-    }
-
-    renderNotify()
-    {
-        if(!this.state.focus) return null;
-        return(
-            <span style={styleSub} className="input-angka-notify">{toDashVal(this.props.value,this.props.digit)}</span>
-        );
     }
 
     render()
@@ -126,8 +166,8 @@ export class InputAngka<P extends IInputAngkaProps,S extends IState> extends Rea
         const st:React.CSSProperties={
             position:'relative',
         };
-        const value=((props as any).value||'').toString();
-        const hasValueNol=focus && (value.length<1);
+        const value=((this as any).value||'').toString();
+        const hasValueNol=focus && (value.length<1 || [' '].indexOf(value)>=0);
         return (
             <span className="InputAngka" style={st}>
                 {this.renderNotify()}
@@ -136,13 +176,11 @@ export class InputAngka<P extends IInputAngkaProps,S extends IState> extends Rea
                     name={props.name}
                     id={props.id}
                     maxLength={props.maxLength}
-                    onChange={e=>{
-                        this.value=e.currentTarget.value;
-                        typeof props.onChange==='function'?props.onChange(e):null;
-                    }}
+                    onChange={this.onChange}
                     onFocus={this.hFocus}
                     onBlur={this.hBlur}
-                    value={hasValueNol?'':props.value}
+                    onKeyDown={this.onKeyP}
+                    value={hasValueNol?'':this.value}
                     className={props.className}
                     style={props.style}
                     autoComplete='off'
